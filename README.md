@@ -30,6 +30,8 @@ Open http://localhost:3000. Use `npm run build` and `npm start` for the producti
 4. Apply the college's Conditional Access policy to this application for MFA. Verify that RD Web and Freshservice also enforce their own sign-in and access policies for users arriving directly at those URLs.
 5. Test an assigned college account, an unassigned account and an account from outside the college tenant. Test MFA under the intended policy and confirm the final pages load for assigned users. The destination services may present their own login depending on their configuration.
 
+Visit `/entra-test` to check whether the server environment is configured and Microsoft OpenID Connect discovery succeeds. The page never displays credential values and does not test user sign-in, app-role assignment, or the callback.
+
 Microsoft references: [Web redirect URI](https://learn.microsoft.com/entra/identity-platform/how-to-add-redirect-uri) and [app roles](https://learn.microsoft.com/entra/identity-platform/howto-add-app-roles-in-apps).
 
 Without credentials, the public homepage and password reset still work, and protected pages show the sign-in unavailable state.

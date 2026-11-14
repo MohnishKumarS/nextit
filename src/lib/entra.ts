@@ -12,9 +12,9 @@ export function entraSettings() {
 
   const app = new URL(appUrl);
   const localHttp = app.protocol === "http:" && ["localhost", "127.0.0.1"].includes(app.hostname);
-  // if ((!localHttp && app.protocol !== "https:") || app.username || app.password || app.pathname !== "/" || app.search || app.hash) {
-  //   throw new Error("APP_URL must be an HTTPS origin or a localhost HTTP origin.");
-  // }
+  if ((!localHttp && app.protocol !== "https:") || app.username || app.password || app.pathname !== "/" || app.search || app.hash) {
+    throw new Error("APP_URL must be an HTTPS origin or a localhost HTTP origin.");
+  }
 
   return { app, tenant, clientId, secret, callback: new URL("/api/auth/callback", app) };
 }
