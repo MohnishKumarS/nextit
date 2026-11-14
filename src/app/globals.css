@@ -1,0 +1,38 @@
+@import "tailwindcss";
+
+@theme {
+  --font-sans: "Inter", "Segoe UI", system-ui, sans-serif;
+  --color-ink: #0d2d50;
+  --color-muted: #405a79;
+  --color-line: #d5e2ee;
+  --color-accent: #8a1765;
+  --color-surface: #f2f6fa;
+}
+
+@layer base {
+  body { @apply bg-surface font-sans text-ink antialiased; }
+  :focus-visible { outline: 3px solid #0e80b4; outline-offset: 3px; }
+  section[id] { scroll-margin-top: 1rem; }
+}
+@layer components {
+  .wrap { @apply mx-auto w-full max-w-[1440px] px-5 sm:px-8 lg:px-12; }
+  .hero {
+    background-color: #0b3d58;
+    background-image: linear-gradient(90deg, #0b3d58 5%, #0b3d58 39%, #0b3d58dd 53%, #0b3d5833 81%), url("/campus.webp");
+    background-size: cover, auto 130%;
+    background-position: center, right 57%;
+    background-repeat: no-repeat;
+  }
+  .panel { @apply rounded-lg border border-line bg-white; }
+  .button { @apply inline-flex min-h-11 items-center justify-center gap-3 rounded bg-accent px-5 py-2.5 text-center text-sm font-semibold text-white transition-colors hover:bg-[#6b1050]; }
+  .footer-link { @apply mb-1 flex w-fit items-center gap-2 text-blue-50; }
+  a.footer-link:hover { @apply underline; }
+  .skip-link { @apply fixed top-2 left-2 z-30 -translate-y-[150%] rounded bg-white px-4 py-2 focus:translate-y-0; }
+}
+@media (max-width: 640px) {
+  .hero {
+    background-image: linear-gradient(90deg, #0b3d58f5, #0b3d58c9), url("/campus.webp");
+    background-size: cover;
+    background-position: center, 70% center;
+  }
+}
