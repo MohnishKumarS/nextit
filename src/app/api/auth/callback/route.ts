@@ -30,6 +30,8 @@ export async function GET(request: NextRequest) {
     if (request.nextUrl.searchParams.has("error")) return failure("denied");
 
     const config = await discoverEntra(settings);
+    console.log(config);
+    
     const callback = new URL(settings.callback);
     callback.search = request.nextUrl.search;
     const tokens = await oidc.authorizationCodeGrant(config, callback, {
@@ -39,6 +41,15 @@ export async function GET(request: NextRequest) {
       idTokenExpected: true,
     });
     const claims = tokens.claims();
+    console.log(claims);
+    console.log("Entra authorization:", {
+  tenantMatched: claims?.tid === settings.tenant,
+  hasPortalRole:
+    Array.isArray(claims?.roles) &&
+    claims.roles.includes("Portal.User"),
+  rolesPresent: Array.isArray(claims?.roles),
+});
+    
     if (claims?.tid !== settings.tenant || !Array.isArray(claims.roles) || !claims.roles.includes("Portal.User")) {
       return failure("denied");
     }

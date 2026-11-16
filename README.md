@@ -67,6 +67,44 @@ To deploy to the project's production domain later:
 npx vercel@latest --prod
 ```
 
+## Deploy to a Linux server with a ZIP
+
+The server needs Node.js 22 or later and npm. Create a source-only archive in the project directory; it excludes local dependencies, build output, Git data and `.env.local`:
+
+```sh
+zip -r -X regent-it-portal-deploy.zip \
+  package.json package-lock.json next-env.d.ts postcss.config.mjs tsconfig.json \
+  README.md .env.example src public
+```
+
+Upload `regent-it-portal-deploy.zip` to the server, then run these commands from the directory where you want the app installed (replace the upload path as needed):
+
+```sh
+mkdir -p regent-it-portal
+unzip /path/to/regent-it-portal-deploy.zip -d regent-it-portal
+cd regent-it-portal
+npm ci
+cp .env.example .env.local
+```
+
+Edit `.env.local` on the server and set the production values:
+
+```dotenv
+APP_URL=https://your-domain.example
+ENTRA_TENANT_ID=your-tenant-id
+ENTRA_CLIENT_ID=your-application-client-id
+ENTRA_CLIENT_SECRET=your-client-secret
+```
+
+Keep the secret private and do not put `.env.local` in the ZIP. Configure the matching HTTPS callback URL (`https://your-domain.example/api/auth/callback`) in the Microsoft Entra app registration. Then build and start the app:
+
+```sh
+npm run build
+npm start -- --hostname 0.0.0.0 --port 3000
+```
+
+The app listens on port 3000 and stays running in the foreground; use your server's service manager (for example, systemd) to keep it running across logouts and reboots. In production, route public HTTPS traffic to the app through a reverse proxy rather than exposing port 3000 directly. After uploading a new ZIP, repeat `npm ci`, `npm run build`, and restart the app.
+
 ## Update portal content
 
 - `src/lib/services.ts` contains the service links, resource entries and service desk details.
