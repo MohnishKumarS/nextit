@@ -1,7 +1,8 @@
 import { NextRequest, NextResponse } from "next/server";
 import * as oidc from "openid-client";
 import { discoverEntra, entraSettings, flowCookie } from "@/lib/entra";
-import { isService, protectedServices } from "@/lib/services";
+import { isService } from "@/lib/services";
+import { authCookie, recaptchaCookie, signPortalCookie, verifyPortalCookie } from "@/lib/portal-session";
 
 export async function GET(request: NextRequest) {
   let service: string | undefined;
@@ -30,7 +31,7 @@ export async function GET(request: NextRequest) {
     if (request.nextUrl.searchParams.has("error")) return failure("denied");
 
     const config = await discoverEntra(settings);
-    console.log(config);
+    // console.log(config);
     
     const callback = new URL(settings.callback);
     callback.search = request.nextUrl.search;
@@ -41,19 +42,27 @@ export async function GET(request: NextRequest) {
       idTokenExpected: true,
     });
     const claims = tokens.claims();
-    console.log(claims);
-    console.log("Entra authorization:", {
-  tenantMatched: claims?.tid === settings.tenant,
-  hasPortalRole:
-    Array.isArray(claims?.roles) &&
-    claims.roles.includes("Portal.User"),
-  rolesPresent: Array.isArray(claims?.roles),
-});
+//     console.log(claims);
+//     console.log("Entra authorization:", {
+//   tenantMatched: claims?.tid === settings.tenant,
+//   hasPortalRole:
+//     Array.isArray(claims?.roles) &&
+//     claims.roles.includes("Portal.User"),
+//   rolesPresent: Array.isArray(claims?.roles),
+// });
     
     if (claims?.tid !== settings.tenant || !Array.isArray(claims.roles) || !claims.roles.includes("Portal.User")) {
       return failure("denied");
     }
-    return redirect(new URL(protectedServices[service].url));
+    const captchaPassed = verifyPortalCookie(request.cookies.get(recaptchaCookie)?.value, "recaptcha", settings.secret)?.passed === true;
+    const response = redirect(new URL(
+      captchaPassed ? `/api/portal/redirect?service=${service}` : `/captcha?service=${service}`,
+      origin,
+    ));
+    response.cookies.set(authCookie(service), signPortalCookie("authorized", { service, issuedAt: Date.now() }, settings.secret), {
+      httpOnly: true, secure: settings.app.protocol === "https:", sameSite: "lax", path: "/", maxAge: 600,
+    });
+    return response;
   } catch {
     return failure("denied");
   }

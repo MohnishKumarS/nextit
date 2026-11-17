@@ -29,7 +29,7 @@ export default async function ServicePage({ params, searchParams }: Props) {
       <span className="mb-4 grid size-14 place-items-center rounded-full bg-[#d3eaf8]"><ShieldCheck size={28} aria-hidden="true" /></span>
       <p className="mb-1 font-semibold text-accent">{protectedServices[service].title}</p>
       <h1 className="text-3xl font-bold">Sign in with your College Account</h1>
-      <p className="mt-3 text-muted">Enter your college email on Microsoft’s sign-in page. After signing in, you’ll return briefly to this portal before continuing to {protectedServices[service].title}.</p>
+      <p className="mt-3 text-muted">Enter your college email on Microsoft’s sign-in page. After your access is confirmed, you’ll return to this portal to complete a one-time reCAPTCHA check before continuing to {protectedServices[service].title}.</p>
       {notice && <p role="alert" className="mt-4 rounded border border-[#edccd9] bg-[#fff1f6] p-3 text-sm">{notice}</p>}
       {configured && <form className="mt-5" action="/api/auth/start" method="get">
         <input type="hidden" name="service" value={service} />

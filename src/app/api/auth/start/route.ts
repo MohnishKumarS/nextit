@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import * as oidc from "openid-client";
 import { discoverEntra, entraSettings, flowCookie } from "@/lib/entra";
 import { isService } from "@/lib/services";
+import { authCookie } from "@/lib/portal-session";
 
 export async function GET(request: NextRequest) {
   const service = request.nextUrl.searchParams.get("service");
@@ -26,6 +27,9 @@ export async function GET(request: NextRequest) {
 
     const response = NextResponse.redirect(target);
     response.headers.set("Cache-Control", "no-store");
+    response.cookies.set(authCookie(service), "", {
+      httpOnly: true, secure: settings.app.protocol === "https:", sameSite: "lax", path: "/", maxAge: 0,
+    });
     response.cookies.set(flowCookie, JSON.stringify({ verifier, state, nonce, service }), {
       httpOnly: true, secure: settings.app.protocol === "https:", sameSite: "lax",
       path: "/api/auth", maxAge: 600,

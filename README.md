@@ -19,16 +19,18 @@ Open http://localhost:3000. Use `npm run build` and `npm start` for the producti
 | Tile | Behaviour |
 | --- | --- |
 | Password Reset | Opens Microsoft Online Password Reset in a new tab. No portal account is required. |
-| Software Centre | Opens the college sign-in handoff, then redirects to the specified RD Web Access URL after Entra verification. |
-| Contact IT | Opens the college sign-in handoff, then redirects to the specified Freshservice new-ticket URL after Entra verification. |
+| Software Centre | Checks the college tenant and `Portal.User` role, then requires reCAPTCHA v2 the first time in a browser session before redirecting to RD Web Access. |
+| Contact IT | Checks the college tenant and `Portal.User` role, then requires reCAPTCHA v2 the first time in a browser session before redirecting to the Freshservice new-ticket URL. |
 
 ## Configure Microsoft Entra ID
 
 1. Register a single-tenant application for accounts in the college directory. Add the **Web** redirect URI `http://localhost:3000/api/auth/callback` for local testing. Add the equivalent HTTPS callback for production.
 2. Create a client secret and set `ENTRA_TENANT_ID`, `ENTRA_CLIENT_ID` and `ENTRA_CLIENT_SECRET` in the server environment. Set `APP_URL` to the matching site origin.
 3. Create an app role with value `Portal.User` for Users/Groups. In the Enterprise Application, require assignment and assign that role to the approved college users or groups. Keep guest and other ineligible users outside these assignments.
-4. Apply the college's Conditional Access policy to this application for MFA. Verify that RD Web and Freshservice also enforce their own sign-in and access policies for users arriving directly at those URLs.
-5. Test an assigned college account, an unassigned account and an account from outside the college tenant. Test MFA under the intended policy and confirm the final pages load for assigned users. The destination services may present their own login depending on their configuration.
+4. Create Google reCAPTCHA v2 **“I’m not a robot” Checkbox** keys and allow the portal's production hostname (and `localhost` for local testing, if needed).
+5. Set `RECAPTCHA_SITE_KEY` and `RECAPTCHA_SECRET_KEY` in the server environment. The site key is rendered on the challenge page; keep the secret key server-side.
+6. Apply the college's Conditional Access policy to this application for MFA. Verify that RD Web and Freshservice also enforce their own sign-in and access policies for users arriving directly at those URLs.
+7. Test an assigned college account, an unassigned account and an account from outside the college tenant. Confirm an assigned account sees reCAPTCHA after Entra authorization, that a failed or missing challenge cannot redirect, and that later authorized services in the same browser session do not show the challenge again. Test MFA under the intended policy and confirm the destination services work.
 
 Visit `/entra-test` to check whether the server environment is configured and Microsoft OpenID Connect discovery succeeds. The page never displays credential values and does not test user sign-in, app-role assignment, or the callback.
 
@@ -94,9 +96,11 @@ APP_URL=https://your-domain.example
 ENTRA_TENANT_ID=your-tenant-id
 ENTRA_CLIENT_ID=your-application-client-id
 ENTRA_CLIENT_SECRET=your-client-secret
+RECAPTCHA_SITE_KEY=your-google-site-key
+RECAPTCHA_SECRET_KEY=your-google-secret-key
 ```
 
-Keep the secret private and do not put `.env.local` in the ZIP. Configure the matching HTTPS callback URL (`https://your-domain.example/api/auth/callback`) in the Microsoft Entra app registration. Then build and start the app:
+Keep both secret values private and do not put `.env.local` in the ZIP. Configure the matching HTTPS callback URL (`https://your-domain.example/api/auth/callback`) in the Microsoft Entra app registration, and allow the production hostname in the Google reCAPTCHA v2 key settings. Then build and start the app:
 
 ```sh
 npm run build
