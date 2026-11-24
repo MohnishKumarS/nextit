@@ -25,9 +25,20 @@
   }
   .panel { @apply rounded-lg border border-line bg-white; }
   .button { @apply inline-flex min-h-11 items-center justify-center gap-3 rounded bg-accent px-5 py-2.5 text-center text-sm font-semibold text-white transition-colors hover:bg-[#6b1050]; }
-  .footer-link { @apply mb-1 flex w-fit items-center gap-2 text-blue-50; }
-  a.footer-link:hover { @apply underline; }
+  .footer-link { @apply mb-3 flex w-fit items-center gap-2 text-sm text-blue-100 transition-colors duration-200; }
+  a.footer-link:hover { @apply text-white underline; }
   .skip-link { @apply fixed top-2 left-2 z-30 -translate-y-[150%] rounded bg-white px-4 py-2 focus:translate-y-0; }
+  .home-enter { animation: home-enter 700ms cubic-bezier(.2,.7,.25,1) both; }
+  .home-enter-delay { animation-delay: 150ms; }
+  .home-card-enter { animation: home-enter 650ms cubic-bezier(.2,.7,.25,1) 100ms both; }
+  .home-card-delay-1 { animation-delay: 180ms; }
+  .home-card-delay-2 { animation-delay: 260ms; }
+  .service-enter { animation: home-enter 600ms cubic-bezier(.2,.7,.25,1) both; }
+  .service-faq[open] summary > svg { transform: rotate(180deg); }
+}
+@keyframes home-enter {
+  from { opacity: 0; transform: translateY(14px); }
+  to { opacity: 1; transform: translateY(0); }
 }
 @media (max-width: 640px) {
   .hero {
@@ -35,4 +46,13 @@
     background-size: cover;
     background-position: center, 70% center;
   }
+}
+@media (prefers-reduced-motion: reduce) {
+  .home-enter, .home-enter-delay, .home-card-enter, .home-card-delay-1, .home-card-delay-2 {
+    animation: none;
+  }
+  .home-card, .home-resource, .home-card *, .home-resource *, .service-enter, .service-enter * {
+    transition-duration: 0.01ms !important;
+  }
+  .service-enter { animation: none; }
 }
