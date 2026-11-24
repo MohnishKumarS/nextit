@@ -10,7 +10,7 @@ export function Header() {
       <div className="wrap flex min-h-20 flex-wrap items-center justify-between gap-3 py-3">
         <div className="flex flex-wrap items-center gap-x-5 gap-y-2">
           <Link href="/" aria-label="Regent College London IT Self-Service home">
-            <Image src="/regent-brand.png" alt="Regent College London, 25+ years of changing lives" width={239} height={53} priority className="h-auto w-[160px] sm:w-[239px]" />
+            <Image src="/rcl-logo.svg" alt="Regent College London, 25+ years of changing lives" width={239} height={53} priority className="h-auto w-[160px] sm:w-[259px]" />
           </Link>
           <div className="border-l border-line pl-4 sm:pl-5">
             <div className="text-base font-bold sm:text-xl">IT Self-Service</div>
@@ -34,7 +34,7 @@ export function Header() {
 export function Footer() {
   return <footer className="mt-auto bg-[#0d3048] text-white">
     <div className="wrap grid gap-6 py-7 text-sm sm:grid-cols-2 lg:grid-cols-[.85fr_1.4fr_1.2fr_1fr]">
-      <Link href="/" className="w-fit text-lg font-bold">Regent College<br />London</Link>
+      <Image src="/rcl-logo-primary.svg" alt="Regent College London, 25+ years of changing lives" width={239} height={53} priority className="h-auto w-[100px] sm:w-[150px]" />
       <section>
         <h2 className="mb-2 font-bold">IT Service Desk</h2>
         <a className="footer-link" href="tel:+442074877200"><Phone size={15} aria-hidden="true" />{supportPhone}</a>

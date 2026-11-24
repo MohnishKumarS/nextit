@@ -23,8 +23,8 @@ export function isService(value: string | null | undefined): value is Service {
   return !!value && Object.hasOwn(protectedServices, value);
 }
 
-export const supportEmail = "itsupport@regentcollege.ac.uk";
-export const supportPhone = "+44 20 7487 7200";
+export const supportEmail = "itsupport@regentgroup.org.uk";
+export const supportPhone = "+44 (0) 203 870 6666";
 export const supportHours = "Monday–Friday, 08:00–18:00";
 
 export const tiles = [
