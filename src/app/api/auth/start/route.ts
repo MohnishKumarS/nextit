@@ -27,9 +27,10 @@ export async function GET(request: NextRequest) {
 
     const response = NextResponse.redirect(target);
     response.headers.set("Cache-Control", "no-store");
-    response.cookies.set(authCookie(service), "", {
-      httpOnly: true, secure: settings.app.protocol === "https:", sameSite: "lax", path: "/", maxAge: 0,
-    });
+    // RECAPTCHA FLOW
+    // response.cookies.set(authCookie(service), "", {
+    //   httpOnly: true, secure: settings.app.protocol === "https:", sameSite: "lax", path: "/", maxAge: 0,
+    // });
     response.cookies.set(flowCookie, JSON.stringify({ verifier, state, nonce, service }), {
       httpOnly: true, secure: settings.app.protocol === "https:", sameSite: "lax",
       path: "/api/auth", maxAge: 600,

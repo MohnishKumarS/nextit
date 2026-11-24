@@ -1,7 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { Clock, Mail, Phone, Shield } from "lucide-react";
-import { resetUrl, supportEmail, supportHours, supportPhone } from "@/lib/services";
+import { protectedServices, resetUrl, supportEmail, supportHours, supportPhone } from "@/lib/services";
 
 export function Header() {
   return <>
@@ -44,7 +44,7 @@ export function Footer() {
       <nav aria-label="Useful links">
         <h2 className="mb-2 font-bold">Useful Links</h2>
         <a className="footer-link" href="https://www.microsoft365.com/">Microsoft 365</a>
-        <Link className="footer-link" href="/software-centre">Software Centre</Link>
+        <a className="footer-link" href={protectedServices["software-centre"].url} target="_blank" rel="noopener noreferrer">Software Centre</a>
         <Link className="footer-link" href="/contact-it">Contact IT</Link>
       </nav>
       <p className="text-blue-100">© {new Date().getFullYear()} Regent College London.</p>

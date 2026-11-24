@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { ArrowRight, ShieldCheck } from "lucide-react";
-import { notFound } from "next/navigation";
+import { notFound, redirect } from "next/navigation";
 import { isService, protectedServices, supportEmail } from "@/lib/services";
 import { entraSettings } from "@/lib/entra";
 
@@ -14,6 +14,7 @@ export async function generateMetadata({ params }: Props) {
 export default async function ServicePage({ params, searchParams }: Props) {
   const { service } = await params;
   if (!isService(service)) notFound();
+  if (!protectedServices[service].requiresMicrosoftSignIn) redirect(protectedServices[service].url);
   const { error } = await searchParams;
   let configured = false;
   try { configured = !!entraSettings(); } catch { /* An invalid APP_URL also disables sign-in. */ }

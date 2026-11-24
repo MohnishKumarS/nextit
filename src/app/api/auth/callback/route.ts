@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import * as oidc from "openid-client";
 import { discoverEntra, entraSettings, flowCookie } from "@/lib/entra";
-import { isService } from "@/lib/services";
+import { isService, protectedServices } from "@/lib/services";
 import { authCookie, recaptchaCookie, signPortalCookie, verifyPortalCookie } from "@/lib/portal-session";
 
 export async function GET(request: NextRequest) {
@@ -54,15 +54,17 @@ export async function GET(request: NextRequest) {
     if (claims?.tid !== settings.tenant || !Array.isArray(claims.roles) || !claims.roles.includes("Portal.User")) {
       return failure("denied");
     }
-    const captchaPassed = verifyPortalCookie(request.cookies.get(recaptchaCookie)?.value, "recaptcha", settings.secret)?.passed === true;
-    const response = redirect(new URL(
-      captchaPassed ? `/api/portal/redirect?service=${service}` : `/captcha?service=${service}`,
-      origin,
-    ));
-    response.cookies.set(authCookie(service), signPortalCookie("authorized", { service, issuedAt: Date.now() }, settings.secret), {
-      httpOnly: true, secure: settings.app.protocol === "https:", sameSite: "lax", path: "/", maxAge: 600,
-    });
-    return response;
+    
+    return redirect(new URL(protectedServices[service].url));
+    // const captchaPassed = verifyPortalCookie(request.cookies.get(recaptchaCookie)?.value, "recaptcha", settings.secret)?.passed === true;
+    // const response = redirect(new URL(
+    //   captchaPassed ? `/api/portal/redirect?service=${service}` : `/captcha?service=${service}`,
+    //   origin,
+    // ));
+    // response.cookies.set(authCookie(service), signPortalCookie("authorized", { service, issuedAt: Date.now() }, settings.secret), {
+    //   httpOnly: true, secure: settings.app.protocol === "https:", sameSite: "lax", path: "/", maxAge: 600,
+    // });
+    // return response;
   } catch {
     return failure("denied");
   }

@@ -4,14 +4,17 @@ export const protectedServices = {
   "software-centre": {
     title: "Software Centre",
     url: "https://titchfieldrds.rtc.uk.net/RDWeb/Pages/en-US/login.aspx?ReturnUrl=/RDWeb/Pages/en-US/Default.aspx",
+    requiresMicrosoftSignIn: false,
   },
   "contact-it": {
     title: "Contact IT",
-    url: "https://regentgroup.freshservice.com/a/tickets/new",
+    url: "https://regentgroup.freshservice.com/support/tickets/new",
+    requiresMicrosoftSignIn: true,
   },
   "my-tickets": {
     title: "My Tickets",
     url: "https://regentgroup.freshservice.com/support/tickets",
+    requiresMicrosoftSignIn: true,
   },
 } as const;
 
@@ -26,7 +29,7 @@ export const supportHours = "Monday–Friday, 08:00–18:00";
 
 export const tiles = [
   { title: "Password Reset", icon: "key", tone: "pink", description: "Reset your Microsoft 365 password securely using Microsoft’s self-service portal.", action: "Reset Password", href: resetUrl, public: true },
-  { title: "Software Centre", icon: "laptop", tone: "lilac", description: "Access approved college applications, software packages and licensed tools.", action: "Open Software Centre", href: "/software-centre", public: false },
+  { title: "Software Centre", icon: "laptop", tone: "lilac", description: "Access approved college applications, software packages and licensed tools.", action: "Open Software Centre", href: protectedServices["software-centre"].url, public: true },
   { title: "Contact IT", icon: "ticket", tone: "blue", description: "Submit a support request, report an issue, or request assistance from the IT Service Desk.", action: "Raise Ticket", href: "/contact-it", public: false },
 ] as const;
 
