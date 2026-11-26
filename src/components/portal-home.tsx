@@ -49,7 +49,7 @@ export function PortalHome() {
             <Sparkles size={14} aria-hidden="true" /> REGENT COLLEGE LONDON · IT SUPPORT
           </span>
           <h1 className="max-w-xl text-[clamp(1.9rem,4.2vw,3.2rem)] leading-[1.08] font-bold tracking-tight">
-            The support you need, <span className="text-[#b9e8ff]">all in one place.</span>
+            The support you need, <span className="text-[#b9e8ff]">all in one place</span>
           </h1>
           <p className="mt-3 max-w-xl text-base leading-relaxed text-blue-50 sm:mt-5 sm:text-lg">
             Find software, manage your account, and get help from the IT Service Desk.
